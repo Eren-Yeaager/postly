@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -13,6 +13,7 @@ export default function ContentGenerator() {
   const [keywords, setKeywords] = useState("");
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
+  const [items, setItems] = useState([]);
 
   const handleGenerate = async () => {
     setLoading(true);
@@ -34,6 +35,31 @@ export default function ContentGenerator() {
     setResult(data.content || data.error || "No content generated.");
     setLoading(false);
   };
+
+  useEffect(() => {
+    fetch("/api/content/user")
+      .then(async (res) => {
+        if (!res.ok) {
+          // Try to parse error JSON, or fallback
+          let error = "Unknown error";
+          try {
+            const data = await res.json();
+            error = data.error || error;
+          } catch {}
+          throw new Error(error);
+        }
+        return res.json();
+      })
+      .then((data) => {
+        setItems(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setLoading(false);
+        // Optionally set an error state here
+        console.error("Fetch error:", err);
+      });
+  }, []);
 
   return (
     <Card className="p-6 max-w-xl mx-auto space-y-6">
