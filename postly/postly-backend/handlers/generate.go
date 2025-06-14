@@ -29,7 +29,7 @@ func GenerateContent(c *gin.Context) {
 		Prompt: prompt,
 		Stream: false,
 		Options: map[string]interface{}{
-			"num_predict": 200, // Increase for longer responses
+			"num_predict": 200, 
 		},
 	}
 	body, _ := json.Marshal(ollamaReq)

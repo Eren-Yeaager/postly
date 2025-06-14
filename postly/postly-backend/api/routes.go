@@ -6,4 +6,6 @@ import (
 )
 func RegisterRoutes(r *gin.Engine){
 	r.POST("/api/generate",handlers.GenerateContent)
+	r.POST("/api/content",handlers.SaveContent)
+	r.GET("/api/content",handlers.ListContent)
 }
