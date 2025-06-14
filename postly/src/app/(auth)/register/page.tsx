@@ -1,10 +1,10 @@
 "use client";
-import { SignIn } from "@clerk/nextjs";
+import { SignUp } from "@clerk/nextjs";
 
-export default function LoginPage() {
+export default function RegisterPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-indigo-100 via-blue-50 to-white">
-      <SignIn redirectUrl="/dashboard" routing="hash" />
+      <SignUp redirectUrl="/dashboard" routing="hash" />
     </div>
   );
 }
