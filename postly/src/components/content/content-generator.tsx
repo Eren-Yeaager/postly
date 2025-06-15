@@ -1,12 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
-import { fetchWithAuth, API_URL } from "@/lib/api";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { API_URL } from "@/lib/api";
+import { useSession, signIn } from "next-auth/react";
 
 export default function ContentGenerator({
   onContentSaved,
@@ -20,32 +19,6 @@ export default function ContentGenerator({
   const [keywords, setKeywords] = useState("");
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
-  const [items, setItems] = useState([]);
-
-  const idToken = session?.id_token;
-  useEffect(() => {
-    if (!idToken) return;
-    const fetchContent = async () => {
-      try {
-        const res = await fetch(`${API_URL}/api/content`, {
-          headers: {
-            Authorization: `Bearer ${idToken}`,
-          },
-        });
-        if (!res.ok) {
-          throw new Error("Failed to fetch content");
-        }
-        const data = await res.json();
-        setItems(data.contents);
-      } catch (err) {
-        console.error("Fetch error:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchContent();
-  }, [session?.id_token]);
 
   if (status === "loading") return <div>Loading...</div>;
   if (!session)
@@ -63,7 +36,7 @@ export default function ContentGenerator({
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${idToken}`,
+          Authorization: `Bearer ${session?.id_token}`,
         },
         body: JSON.stringify({
           topic,
@@ -93,7 +66,7 @@ export default function ContentGenerator({
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${idToken}`,
+          Authorization: `Bearer ${session?.id_token}`,
         },
         body: JSON.stringify({
           title: topic,
