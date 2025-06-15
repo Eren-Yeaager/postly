@@ -1,12 +1,38 @@
 "use client";
+import { useSession, signIn } from "next-auth/react";
 import ContentGenerator from "@/components/content/content-generator";
 import ContentList from "@/components/content/content-list";
 import { useState, useCallback } from "react";
+
 export default function DashboardPage() {
+  const { data: session, status } = useSession();
   const [refreshFlag, setRefreshFlag] = useState(false);
   const handleContentSaved = useCallback(() => {
     setRefreshFlag((flag) => !flag);
   }, []);
+
+  if (status === "loading") return <div>Loading...</div>;
+
+  if (!session)
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center">
+        <div className="bg-white rounded-xl shadow-lg p-10 flex flex-col items-center w-full max-w-md">
+          <h2 className="text-2xl font-bold mb-4 text-indigo-700">
+            Sign in required
+          </h2>
+          <p className="mb-6 text-gray-500 text-center">
+            Please sign in with Google to access your dashboard.
+          </p>
+          <button
+            onClick={() => signIn("google")}
+            className="px-6 py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition"
+          >
+            Sign in with Google
+          </button>
+        </div>
+      </div>
+    );
+
   return (
     <div className="space-y-10">
       <div className="relative overflow-hidden rounded-2xl shadow-lg bg-gradient-to-br from-indigo-500 via-blue-400 to-indigo-200 p-8 flex flex-col md:flex-row items-center">

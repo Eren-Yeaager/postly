@@ -121,7 +121,7 @@ export default function ContentGenerator({
   return (
     <Card className="p-8 rounded-2xl shadow-lg bg-white max-w-2xl mx-auto">
       <h2 className="text-2xl font-bold mb-6 text-indigo-700 flex items-center gap-2">
-        <span>AI Content Generator</span>
+        <span>Postly Content Generator</span>
         <span className="inline-block bg-indigo-100 text-indigo-700 text-xs px-3 py-1 rounded-full font-semibold">
           Beta
         </span>
