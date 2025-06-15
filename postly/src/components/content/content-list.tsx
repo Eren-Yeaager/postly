@@ -1,53 +1,81 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card } from "@/components/ui/card";
+import { API_URL } from "@/lib/api";
+import { useSession } from "next-auth/react";
+type Content = {
+  ID?: string | number;
+  Platform?: string;
+  Tone?: string;
+  Status?: string;
+  Title?: string;
+  Content?: string;
+};
 
-interface Content {
-  id: string;
-  title: string;
-  content: string;
-  platform: string;
-  status: string;
-  createdAt: string;
-}
-
-export default function ContentList() {
-  const [items, setItems] = useState<Content[]>([]);
+export default function ContentList({
+  refreshFlag,
+}: {
+  refreshFlag?: boolean;
+}) {
+  const [contents, setContents] = useState<Content[]>([]);
   const [loading, setLoading] = useState(true);
+  const { data: session, status } = useSession();
+  const id_token = session?.id_token;
 
   useEffect(() => {
-    fetch("/api/content/user")
-      .then((res) => res.json())
-      .then((data) => {
-        setItems(data);
+    if (!session?.id_token) return;
+    const fetchContents = async () => {
+      setLoading(true);
+      try {
+        const res = await fetch(`${API_URL}/api/content`, {
+          headers: {
+            Authorization: `Bearer ${session.id_token}`,
+          },
+        });
+        if (!res.ok) throw new Error("Failed to fetch content");
+        const data = await res.json();
+        console.log("Fetched contents from DB:", data.contents);
+        setContents(data.contents || []);
+      } catch (err) {
+        setContents([]);
+      } finally {
         setLoading(false);
-      });
-  }, []);
+      }
+    };
+    fetchContents();
+  }, [session?.id_token, refreshFlag]);
 
   if (loading) return <div>Loading your content...</div>;
-  if (!items.length)
+  if (!contents.length)
     return (
-      <div className="text-gray-500">
-        No content yet. Generate and save your first post!
+      <div className="text-gray-500 text-center py-8">
+        No content found. Start generating some posts!
       </div>
     );
 
   return (
-    <div className="grid gap-4">
-      {items.map((item) => (
-        <Card key={item.id} className="p-4">
-          <div className="flex justify-between items-center mb-2">
-            <span className="font-semibold">{item.title}</span>
-            <span className="text-xs text-gray-400">{item.platform}</span>
+    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {contents.map((item, idx) => (
+        <div
+          key={item.ID || idx}
+          className="bg-white rounded-xl shadow p-6 flex flex-col gap-2 border hover:shadow-lg transition"
+        >
+          <div className="flex items-center gap-2 mb-2">
+            <span className="inline-block bg-indigo-100 text-indigo-700 text-xs px-2 py-1 rounded-full font-semibold">
+              {item.Platform}
+            </span>
+            <span className="inline-block bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full font-semibold">
+              {item.Tone || "General"}
+            </span>
+            <span className="ml-auto text-xs text-gray-400">
+              {item.Status || "draft"}
+            </span>
           </div>
-          <div className="text-gray-700 whitespace-pre-line">
-            {item.content}
-          </div>
-          <div className="text-xs text-gray-400 mt-2">
-            {new Date(item.createdAt).toLocaleString()}
-          </div>
-        </Card>
+          <h3 className="font-bold text-lg mb-1">{item.Title || "Untitled"}</h3>
+          <p className="text-gray-700 whitespace-pre-line flex-1">
+            {item.Content}
+          </p>
+        </div>
       ))}
     </div>
   );

@@ -8,7 +8,11 @@ import { Card } from "@/components/ui/card";
 import { fetchWithAuth, API_URL } from "@/lib/api";
 import { useSession, signIn, signOut } from "next-auth/react";
 
-export default function ContentGenerator() {
+export default function ContentGenerator({
+  onContentSaved,
+}: {
+  onContentSaved?: () => void;
+}) {
   const { data: session, status } = useSession();
   const [topic, setTopic] = useState("");
   const [platform, setPlatform] = useState("Twitter");
@@ -81,18 +85,60 @@ export default function ContentGenerator() {
     }
   };
 
+  const handleSave = async () => {
+    if (!result) return;
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_URL}/api/content`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${idToken}`,
+        },
+        body: JSON.stringify({
+          title: topic,
+          content: result,
+          platform,
+          tone,
+          status: "draft",
+        }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        alert("Content saved!");
+        onContentSaved?.();
+        console.log("Fetched contents from DB:", data.contents);
+      } else {
+        alert(data.error || "Failed to save content.");
+      }
+    } catch (error) {
+      alert("Failed to save content. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <Card className="p-6 max-w-xl mx-auto space-y-6">
-      <h2 className="text-2xl font-bold mb-2">AI Content Generator</h2>
-      <div className="space-y-4">
+    <Card className="p-8 rounded-2xl shadow-lg bg-white max-w-2xl mx-auto">
+      <h2 className="text-2xl font-bold mb-6 text-indigo-700 flex items-center gap-2">
+        <span>AI Content Generator</span>
+        <span className="inline-block bg-indigo-100 text-indigo-700 text-xs px-3 py-1 rounded-full font-semibold">
+          Beta
+        </span>
+      </h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         <Input
           placeholder="Topic (e.g. Social Media Marketing)"
           value={topic}
           onChange={(e) => setTopic(e.target.value)}
+          className="col-span-2"
         />
-        <div className="flex gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Platform
+          </label>
           <select
-            className="border rounded px-3 py-2 flex-1"
+            className="border rounded px-3 py-2 w-full"
             value={platform}
             onChange={(e) => setPlatform(e.target.value)}
           >
@@ -102,8 +148,13 @@ export default function ContentGenerator() {
             <option>Facebook</option>
             <option>TikTok</option>
           </select>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Tone
+          </label>
           <select
-            className="border rounded px-3 py-2 flex-1"
+            className="border rounded px-3 py-2 w-full"
             value={tone}
             onChange={(e) => setTone(e.target.value)}
           >
@@ -117,16 +168,37 @@ export default function ContentGenerator() {
           placeholder="Keywords (comma separated)"
           value={keywords}
           onChange={(e) => setKeywords(e.target.value)}
+          className="col-span-2"
         />
-        <Button
-          className="w-full"
-          onClick={handleGenerate}
-          disabled={loading || !topic}
-        >
-          {loading ? "Generating..." : "Generate"}
-        </Button>
       </div>
-      {result && <Textarea className="mt-4" value={result} readOnly rows={6} />}
+      <Button
+        className="w-full py-3 text-lg font-semibold"
+        onClick={handleGenerate}
+        disabled={loading || !topic}
+      >
+        {loading ? "Generating..." : "Generate Content"}
+      </Button>
+      {result && (
+        <div className="mt-8 flex flex-col gap-2">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Generated Content
+          </label>
+          <Textarea
+            className="w-full rounded-lg border p-4 text-base"
+            value={result}
+            readOnly
+            rows={6}
+          />
+          <Button
+            className="w-full py-3 text-lg font-semibold mt-2"
+            onClick={handleSave}
+            disabled={loading}
+            variant="secondary"
+          >
+            Save Content
+          </Button>
+        </div>
+      )}
     </Card>
   );
 }
