@@ -10,9 +10,10 @@ import (
 )
 
 func GenerateContent(c *gin.Context) {
-
+	
 	userEmail, exists := c.Get("userEmail")
     if !exists {
+		
         c.JSON(http.StatusUnauthorized, gin.H{"error": "User not found"})
         return
     }

@@ -5,7 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func RegisterRoutes(r *gin.Engine) {
+func RegisterRoutes(r *gin.RouterGroup) {
 	r.POST("/generate", handlers.GenerateContent)
     r.POST("/content", handlers.SaveContent)
     r.GET("/content", handlers.ListContent)
