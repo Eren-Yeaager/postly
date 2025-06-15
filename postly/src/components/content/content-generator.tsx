@@ -50,10 +50,7 @@ export default function ContentGenerator({
       });
       const data = await res.json();
       setResult(data.content || data.error || "No content generated.");
-    } catch (error) {
-      console.error("Generation error:", error);
-      setResult("Failed to generate content. Please try again.");
-    } finally {
+    } catch {
       setLoading(false);
     }
   };
@@ -84,9 +81,7 @@ export default function ContentGenerator({
       } else {
         alert(data.error || "Failed to save content.");
       }
-    } catch (error) {
-      alert("Failed to save content. Please try again.");
-    } finally {
+    } catch {
       setLoading(false);
     }
   };

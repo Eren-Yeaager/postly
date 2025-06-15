@@ -35,7 +35,7 @@ export default function ContentList({
         if (!res.ok) throw new Error("Failed to fetch content");
         const data = await res.json();
         setContents(data.contents || []);
-      } catch (err) {
+      } catch {
         setContents([]);
       } finally {
         setLoading(false);
