@@ -24,8 +24,8 @@ export default function DashboardPage() {
             Please sign in with Google to access your dashboard.
           </p>
           <button
-            onClick={() => signIn("google")}
-            className="px-6 py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition"
+            onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+            className="px-6 py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition cursor-pointer"
           >
             Sign in with Google
           </button>
@@ -34,7 +34,7 @@ export default function DashboardPage() {
     );
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-10 max-w-7xl mx-auto px-4">
       <div className="relative overflow-hidden rounded-2xl shadow-lg bg-gradient-to-br from-indigo-500 via-blue-400 to-indigo-200 p-8 flex flex-col md:flex-row items-center">
         <div className="flex-1">
           <h1 className="text-4xl font-extrabold text-white mb-2 drop-shadow">
@@ -62,15 +62,16 @@ export default function DashboardPage() {
         /> */}
       </div>
 
-      <div>
-        <ContentGenerator onContentSaved={handleContentSaved} />
-      </div>
-
-      <div>
-        <h2 className="text-2xl font-bold text-indigo-700 mb-4">
-          Your Recent Content
-        </h2>
-        <ContentList refreshFlag={refreshFlag} />
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+        <div>
+          <ContentGenerator onContentSaved={handleContentSaved} />
+        </div>
+        <div>
+          <h2 className="text-2xl font-bold text-indigo-700 mb-4">
+            Your Recent Content
+          </h2>
+          <ContentList refreshFlag={refreshFlag} />
+        </div>
       </div>
     </div>
   );

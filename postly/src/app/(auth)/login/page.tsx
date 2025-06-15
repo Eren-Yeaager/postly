@@ -36,7 +36,7 @@ export default function LoginPage() {
           </p>
           <button
             onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
-            className="flex items-center gap-2 px-8 py-4 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition text-lg"
+            className="flex items-center gap-2 px-8 py-4 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition text-lg cursor-pointer"
           >
             <svg width="28" height="28" viewBox="0 0 48 48" className="mr-2">
               <g>

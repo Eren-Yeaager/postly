@@ -41,7 +41,9 @@ func ListContent (c *gin.Context){
         return
     }
 	var contents []models.Content
-	if err:= db.DB.Find(&contents).Error; err != nil{
+	if err:= db.DB.Where("user_id = ?", userEmail.(string)).
+    Order("created_at DESC").
+    Find(&contents).Error; err != nil{
 		c.JSON(http.StatusInternalServerError,gin.H{"error":"Failed to fetch data"})
 		return
 	}

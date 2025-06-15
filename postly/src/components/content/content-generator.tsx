@@ -119,9 +119,9 @@ export default function ContentGenerator({
   };
 
   return (
-    <Card className="p-8 rounded-2xl shadow-lg bg-white max-w-2xl mx-auto">
+    <Card className="p-8 rounded-2xl shadow-lg bg-white w-full max-w-xl mx-auto">
       <h2 className="text-2xl font-bold mb-6 text-indigo-700 flex items-center gap-2">
-        <span>Postly Content Generator</span>
+        <span>Postly Generator</span>
         <span className="inline-block bg-indigo-100 text-indigo-700 text-xs px-3 py-1 rounded-full font-semibold">
           Beta
         </span>
@@ -179,16 +179,13 @@ export default function ContentGenerator({
         {loading ? "Generating..." : "Generate Content"}
       </Button>
       {result && (
-        <div className="mt-8 flex flex-col gap-2">
+        <div className="mt-8">
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Generated Content
           </label>
-          <Textarea
-            className="w-full rounded-lg border p-4 text-base"
-            value={result}
-            readOnly
-            rows={6}
-          />
+          <div className="bg-indigo-50 border border-indigo-100 rounded-lg p-4 text-base text-gray-800 whitespace-pre-line max-h-60 overflow-auto shadow">
+            {result}
+          </div>
           <Button
             className="w-full py-3 text-lg font-semibold mt-2"
             onClick={handleSave}

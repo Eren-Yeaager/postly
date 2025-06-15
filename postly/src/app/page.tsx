@@ -41,7 +41,7 @@ export default function LandingPage() {
       </section>
 
       <section className="w-full max-w-5xl mx-auto py-16 px-4 grid grid-cols-1 md:grid-cols-3 gap-10">
-        <div className="bg-white rounded-xl shadow-lg p-8 flex flex-col items-center transition-transform hover:-translate-y-2 hover:shadow-2xl">
+        <div className="bg-white rounded-xl shadow-lg p-8 flex flex-col items-center transition-transform hover:-translate-y-2 hover:shadow-2xl cursor-pointer">
           <span className="text-indigo-500 text-4xl mb-3">⚡️</span>
           <h3 className="font-bold text-xl mb-2">Instant Content</h3>
           <p className="text-gray-500 text-center text-base">
@@ -49,14 +49,14 @@ export default function LandingPage() {
             GPT-4.
           </p>
         </div>
-        <div className="bg-white rounded-xl shadow-lg p-8 flex flex-col items-center transition-transform hover:-translate-y-2 hover:shadow-2xl">
+        <div className="bg-white rounded-xl shadow-lg p-8 flex flex-col items-center transition-transform hover:-translate-y-2 hover:shadow-2xl cursor-pointer">
           <span className="text-indigo-500 text-4xl mb-3">📅</span>
           <h3 className="font-bold text-xl mb-2">Smart Scheduling</h3>
           <p className="text-gray-500 text-center text-base">
             Plan, schedule, and automate your content calendar with ease.
           </p>
         </div>
-        <div className="bg-white rounded-xl shadow-lg p-8 flex flex-col items-center transition-transform hover:-translate-y-2 hover:shadow-2xl">
+        <div className="bg-white rounded-xl shadow-lg p-8 flex flex-col items-center transition-transform hover:-translate-y-2 hover:shadow-2xl cursor-pointer">
           <span className="text-indigo-500 text-4xl mb-3">📈</span>
           <h3 className="font-bold text-xl mb-2">Actionable Analytics</h3>
           <p className="text-gray-500 text-center text-base">
