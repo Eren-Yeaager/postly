@@ -4,8 +4,10 @@ import (
 	"github.com/Eren-Yeaager/postly-backend/handlers"
 	"github.com/gin-gonic/gin"
 )
-func RegisterRoutes(r *gin.Engine){
-	r.POST("/api/generate",handlers.GenerateContent)
-	r.POST("/api/content",handlers.SaveContent)
-	r.GET("/api/content",handlers.ListContent)
+
+func RegisterRoutes(r *gin.Engine) {
+	r.POST("/generate", handlers.GenerateContent)
+    r.POST("/content", handlers.SaveContent)
+    r.GET("/content", handlers.ListContent)
+	
 }

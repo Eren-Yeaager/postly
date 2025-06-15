@@ -10,6 +10,12 @@ import (
 )
 
 func GenerateContent(c *gin.Context) {
+
+	userEmail, exists := c.Get("userEmail")
+    if !exists {
+        c.JSON(http.StatusUnauthorized, gin.H{"error": "User not found"})
+        return
+    }
 	var req models.GenerateRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
@@ -50,9 +56,21 @@ func GenerateContent(c *gin.Context) {
 
 	c.JSON(http.StatusOK, models.GenerateResponse{
 		Content: ollamaResp.Response,
+		UserID:userEmail.(string),
 	})
 }
 
+func CheckOllamaHealth(c *gin.Context) {
+    resp, err := http.Get("http://localhost:11434/api/health")
+    if err != nil || resp.StatusCode != http.StatusOK {
+        c.JSON(http.StatusServiceUnavailable, gin.H{
+            "status": "unhealthy",
+            "error": "Ollama service is not responding",
+        })
+        return
+    }
+    c.JSON(http.StatusOK, gin.H{"status": "healthy"})
+}
 // Custom function
 func joinKeywords(keywords []string) string {
 	result := ""

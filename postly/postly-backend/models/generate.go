@@ -8,4 +8,5 @@ type GenerateRequest struct{
 }
 type GenerateResponse struct{
 	Content string `json:"content"`
+	UserID string  `json:"userId"`
 }

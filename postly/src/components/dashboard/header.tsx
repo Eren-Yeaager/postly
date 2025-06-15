@@ -1,26 +1,29 @@
 "use client";
 
-import { UserButton, useUser, SignInButton } from "@clerk/nextjs";
+import { useSession, signIn, signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 
 export default function Header() {
-  const { user, isSignedIn } = useUser();
+  const { data: session, status } = useSession();
 
   return (
     <header className="w-full bg-white shadow px-6 py-4 flex justify-end items-center gap-4">
-      {isSignedIn ? (
+      {status === "loading" ? null : session ? (
         <>
           <span className="text-gray-700 font-medium">
-            {user?.fullName ||
-              user?.username ||
-              user?.emailAddresses[0]?.emailAddress}
+            {session.user?.name || session.user?.email}
           </span>
-          <UserButton afterSignOutUrl="/" />
+          <Button
+            variant="outline"
+            onClick={() => signOut({ callbackUrl: "/" })}
+          >
+            Sign Out
+          </Button>
         </>
       ) : (
-        <SignInButton mode="modal">
-          <Button variant="outline">Sign In</Button>
-        </SignInButton>
+        <Button variant="outline" onClick={() => signIn("google")}>
+          Sign In
+        </Button>
       )}
     </header>
   );
