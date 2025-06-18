@@ -1,4 +1,4 @@
-FROM golang:1.22-alpine AS build
+FROM golang:1.23-alpine AS build
 
 # Install build dependencies
 RUN apk add --no-cache gcc musl-dev
@@ -32,9 +32,6 @@ COPY --from=build /app/app .
 
 # Verify the binary was copied and make it executable
 RUN ls -la ./app && chmod +x ./app
-
-# Expose port
-EXPOSE 8080
 
 # Run the application
 CMD ["./app"]

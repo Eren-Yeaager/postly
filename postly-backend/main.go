@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/Eren-Yeaager/postly-backend/api"
 	"github.com/Eren-Yeaager/postly-backend/db"
@@ -46,5 +47,9 @@ func main(){
 	r.GET("/",func(c *gin.Context){
 		c.String(http.StatusOK,"Hello from Gin !")
 	})
-	r.Run(":8080")
+	port := os.Getenv("PORT")
+    if port == "" {
+    port = "8080"
+    }
+    r.Run(":" + port)
 }
