@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { API_URL } from "@/lib/api";
 import { useSession, signIn } from "next-auth/react";
+import { toast } from "sonner";
 
 export default function ContentGenerator({
   onContentSaved,
@@ -19,6 +20,7 @@ export default function ContentGenerator({
   const [keywords, setKeywords] = useState("");
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
+  const [hasSaved, setHasSaved] = useState(false);
 
   if (status === "loading") return <div>Loading...</div>;
   if (!session)
@@ -31,6 +33,7 @@ export default function ContentGenerator({
   const handleGenerate = async () => {
     setLoading(true);
     setResult("");
+    setHasSaved(false);
     try {
       const res = await fetch(`${API_URL}/api/generate`, {
         method: "POST",
@@ -50,7 +53,7 @@ export default function ContentGenerator({
       });
       const data = await res.json();
       setResult(data.content || data.error || "No content generated.");
-    } catch {
+    } finally {
       setLoading(false);
     }
   };
@@ -75,13 +78,14 @@ export default function ContentGenerator({
       });
       const data = await res.json();
       if (res.ok) {
-        alert("Content saved!");
+        toast.success("Content saved!");
+        setHasSaved(true);
         onContentSaved?.();
         console.log("Fetched contents from DB:", data.contents);
       } else {
-        alert(data.error || "Failed to save content.");
+        toast.error(data.error || "Failed to save content.");
       }
-    } catch {
+    } finally {
       setLoading(false);
     }
   };
@@ -157,10 +161,10 @@ export default function ContentGenerator({
           <Button
             className="w-full py-3 text-lg font-semibold mt-2"
             onClick={handleSave}
-            disabled={loading}
+            disabled={loading || hasSaved}
             variant="secondary"
           >
-            Save Content
+            {hasSaved ? "Already Saved" : "Save Content"}
           </Button>
         </div>
       )}
